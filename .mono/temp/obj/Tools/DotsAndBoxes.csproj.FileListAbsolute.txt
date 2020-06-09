@@ -1,0 +1,10 @@
+C:\Users\Julia\Desktop\test\.mono\temp\obj\Tools\DotsAndBoxes.csprojAssemblyReference.cache
+C:\Users\Julia\Desktop\test\.mono\temp\bin\Tools\DotsAndBoxes.dll
+C:\Users\Julia\Desktop\test\.mono\temp\bin\Tools\DotsAndBoxes.pdb
+C:\Users\Julia\Desktop\test\.mono\temp\obj\Tools\DotsAndBoxes.dll
+C:\Users\Julia\Desktop\test\.mono\temp\obj\Tools\DotsAndBoxes.pdb
+C:\Users\Julia\Desktop\DotsAndBoxes\.mono\temp\bin\Tools\DotsAndBoxes.dll
+C:\Users\Julia\Desktop\DotsAndBoxes\.mono\temp\bin\Tools\DotsAndBoxes.pdb
+C:\Users\Julia\Desktop\DotsAndBoxes\.mono\temp\obj\Tools\DotsAndBoxes.csprojAssemblyReference.cache
+C:\Users\Julia\Desktop\DotsAndBoxes\.mono\temp\obj\Tools\DotsAndBoxes.dll
+C:\Users\Julia\Desktop\DotsAndBoxes\.mono\temp\obj\Tools\DotsAndBoxes.pdb

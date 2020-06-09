@@ -1,0 +1,5 @@
+C:\Users\Julia\Desktop\test\.mono\temp\obj\Tools\test.csprojAssemblyReference.cache
+C:\Users\Julia\Desktop\test\.mono\temp\bin\Tools\test.dll
+C:\Users\Julia\Desktop\test\.mono\temp\bin\Tools\test.pdb
+C:\Users\Julia\Desktop\test\.mono\temp\obj\Tools\test.dll
+C:\Users\Julia\Desktop\test\.mono\temp\obj\Tools\test.pdb
