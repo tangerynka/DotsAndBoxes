@@ -9,8 +9,10 @@ enum Orientation
 public class EdgeButton : Button
 {
     [Signal]
-    public delegate void Claimed(int i, int j, int o);
-    int i, j;
+    public delegate void ClaimedPlayer(int i, int j, int o);
+    [Signal]
+    public delegate void ClaimedBot(int i, int j, int o);
+    public int i, j;
     // Declare member variables here. Examples:
     // private int a = 2;
     // private string b = "text";
@@ -26,11 +28,12 @@ public class EdgeButton : Button
         this.orientation = (Orientation)orientation;
         this.i = i;
         this.j = j;
-        Text = " " + i.ToString() + " " + j.ToString(); //orientation.ToString() + 
+        // Text = " " + i.ToString() + " " + j.ToString(); //orientation.ToString() + 
     }
     public override void _Ready()
     {
-        Connect("Claimed", GetParent(), "_on_claimed");
+        Connect("ClaimedPlayer", GetParent(), "_on_claimed_player");
+        Connect("ClaimedBot", GetParent(), "_on_claimed_bot");
 		Connect("pressed", this, nameof(_on_Button_pressed));
         ToggleMode = true;
         Theme = t;
@@ -42,8 +45,15 @@ public class EdgeButton : Button
         // Text = "TOGGLED";
         Disabled = true;
         Theme = (Theme)GD.Load("res://playerButton.tres");
-        EmitSignal(nameof(Claimed),i,j, orientation);
+        EmitSignal(nameof(ClaimedPlayer),i,j, orientation);
         // GetTree().Root.GetNode<signalManager>("SignalManager").EmitSignal(nameof(Claimed),i,j);
+    }
+    public void Claim()
+    {
+        Disabled = true;
+        Theme = (Theme)GD.Load("res://botButton.tres");
+        EmitSignal(nameof(ClaimedBot),i,j, orientation);
+
     }
 //  // Called every frame. 'delta' is the elapsed time since the previous frame.
 //  public override void _Process(float delta)

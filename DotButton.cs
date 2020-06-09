@@ -15,7 +15,7 @@ public class DotButton : Button
     {
         this.i = i;
         this.j = j;
-        Text = i.ToString() + " " + j.ToString();
+        // Text = i.ToString() + " " + j.ToString();
     }
 //  // Called every frame. 'delta' is the elapsed time since the previous frame.
 //  public override void _Process(float delta)
