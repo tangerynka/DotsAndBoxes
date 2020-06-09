@@ -19,6 +19,10 @@ config/name="DotsAndBoxes"
 run/main_scene="res://main.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+SignalManager="*res://signalManager.cs"
+
 [rendering]
 
 environment/default_environment="res://default_env.tres"

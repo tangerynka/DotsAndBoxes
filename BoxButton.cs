@@ -4,6 +4,7 @@ using System;
 public class BoxButton : Button
 {
     int i, j;
+    int claimed_edges = 0;
 
     public override void _Ready()
     {
@@ -17,9 +18,13 @@ public class BoxButton : Button
         this.j = j;
         Text = i.ToString() + " " + j.ToString();
     }
-//  // Called every frame. 'delta' is the elapsed time since the previous frame.
-//  public override void _Process(float delta)
-//  {
-//      
-//  }
+
+    internal void EdgeClaimed()
+    {
+        claimed_edges++;
+    }
+    public override void _Process(float delta)
+    {
+        if(claimed_edges == 4) Theme = (Theme)GD.Load("res://playerButton.tres");
+    }
 }
