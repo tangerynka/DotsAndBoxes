@@ -19,10 +19,12 @@ public class Main : Control
 	bool changePlayer = true;
 	// EdgeButton[,] validMoves;
 	List<(int,int)> validMoves;
+	int playerScore = 0;
+	int botScore = 0;
 	public override void _Ready()
 	{
-		Connect("ContinuePlayer", this, "conP");
-		Connect("ContinueBot", this, "conB");
+		// Connect("ContinuePlayer", this, "conP");
+		// Connect("ContinueBot", this, "conB");
 		count = 2*boardSize + 1;
 		int i_size, j_size;
 		int i_pos = margin, j_pos = margin;
@@ -46,7 +48,7 @@ public class Main : Control
 				{
 					int o = j%2==0 ? 0 : 1; //horizontal : vertical
 					b = new EdgeButton(i,j, o);
-					b.Text = validMoves.Count.ToString();
+					// b.Text = validMoves.Count.ToString();
 					validMoves.Add((i,j));
 					Console.WriteLine(i.ToString() +" " +j.ToString() +" "+ validMoves.Count);
 					// Console.WriteLine(i.ToString() +" " +j.ToString() +" "+ (validMoves.Count-1).ToString());
@@ -69,26 +71,18 @@ public class Main : Control
 		play();
 	}
 
-	public void conP()
-	{
-
-	}
-	public void conB()
-	{
-
-	}
 	public void _on_claimed_player(int i, int j, int o)
 	{
-		handle_button(i, j, o);
+		handle_button(i, j, o, 1);
 		EmitSignal(nameof(ContinuePlayer));
 	}
 	public void _on_claimed_bot(int i, int j, int o)
 	{
-		handle_button(i, j, o);
+		handle_button(i, j, o, -1);
 		EmitSignal(nameof(ContinueBot));
 
 	}
-	public void handle_button(int i, int j, int o)
+	public void handle_button(int i, int j, int o, int ap)
 	{
 		// int new_j, new_i;
 		BoxButton tmp;
@@ -99,12 +93,12 @@ public class Main : Control
 			if(j>0) 
 			{
 				tmp = (BoxButton)buttons[i, j-1];
-				tmp.EdgeClaimed();
+				tmp.EdgeClaimed(ap);
 			}
 			if(j<count-1) 
 			{
 				tmp = (BoxButton)buttons[i, j+1];
-				tmp.EdgeClaimed();
+				tmp.EdgeClaimed(ap);
 			}
 		}
 		else
@@ -114,16 +108,16 @@ public class Main : Control
 			if(i>0) 
 			{
 				tmp = (BoxButton)buttons[i-1, j];
-				tmp.EdgeClaimed();
+				tmp.EdgeClaimed(ap);
 			}
 			if(i<count-1) 
 			{
 				tmp = (BoxButton)buttons[i+1, j];
-				tmp.EdgeClaimed();
+				tmp.EdgeClaimed(ap);
 			} 
 		}
 		// validMoves.RemoveAt(((EdgeButton)buttons[i,j]).index);
-		buttons[i,j].Text = "C";
+		// buttons[i,j].Text = "C";
 		buttons[i,j] = null;
 		validMoves.Remove((i,j));
 		Console.WriteLine(validMoves.Count);
@@ -147,23 +141,24 @@ public class Main : Control
 
 	async void play()
 	{
-		while(true)
+		while(validMoves.Count>0)
 		{
 			if(changePlayer) active_player = -active_player;
 			else changePlayer = true;
 
-			foreach (Control c in GetChildren()) c.MouseFilter = MouseFilterEnum.Ignore;
+			foreach (var c in GetChildren()) 
+				if(c is Control) ((Control)c).MouseFilter = MouseFilterEnum.Ignore;
 			
-			if (validMoves.Count == 0)
-			{
-				//GameOver
-			}
+			// if (validMoves.Count == 0)
+			// {
+			// 	//GameOver
+			// }
 
-			// Console.WriteLine(active_player);
 			if(active_player == 1)
 			{
 				//player stuff
-				foreach (Control c in GetChildren()) c.MouseFilter = MouseFilterEnum.Pass;
+				foreach (var c in GetChildren()) 
+				if(c is Control) ((Control)c).MouseFilter = MouseFilterEnum.Pass;
 				await ToSignal(this,"ContinuePlayer");
 			}
 			else if(active_player == -1)
@@ -171,7 +166,6 @@ public class Main : Control
 				//AI stuff
 				AI_turn();
 			}
-			// Disconnect("Continue", this, "con");
 		}
 	}
 

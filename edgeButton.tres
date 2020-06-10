@@ -8,12 +8,12 @@ border_width_bottom = 1
 border_color = Color( 0.498039, 0.498039, 0.498039, 1 )
 
 [sub_resource type="StyleBoxFlat" id=2]
-bg_color = Color( 0.803922, 0.803922, 0.803922, 1 )
+bg_color = Color( 0.862745, 0.862745, 0.862745, 0.690196 )
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color( 0.498039, 0.498039, 0.498039, 1 )
+border_color = Color( 0.682353, 0.682353, 0.682353, 1 )
 
 [sub_resource type="StyleBoxFlat" id=3]
 bg_color = Color( 0.109804, 0.109804, 0.109804, 1 )

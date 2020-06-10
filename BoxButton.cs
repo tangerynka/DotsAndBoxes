@@ -22,17 +22,18 @@ public class BoxButton : Button
     {
         this.i = i;
         this.j = j;
-        Text = i.ToString() + " " + j.ToString();
+        // Text = i.ToString() + " " + j.ToString();
     }
 
-    internal void EdgeClaimed()
+    internal void EdgeClaimed(int ap)
     {
         claimed_edges++;
         if(claimed_edges == 4) 
         {
             EmitSignal(nameof(Filled));
             // Connect("Claimed", GetParent(), "_on_claimed");
-            Theme = (Theme)GD.Load("res://playerButton.tres");
+            if(ap == 1) Theme = (Theme)GD.Load("res://playerButton.tres");
+            else if(ap == -1) Theme = (Theme)GD.Load("res://botButton.tres");
         }
         else EmitSignal(nameof(NotFilled));
     }
