@@ -11,27 +11,29 @@ public class Main : Control
 	public delegate void ContinueBot();
 	Button[,] buttons; 
 	int boardSize = 10;
+	int margin = 20;
 	int bSize = 40;
 	int sSize = 20;
 	int count;
 	int active_player = -1;
 	bool changePlayer = true;
-	List<EdgeButton> validMoves;
+	// EdgeButton[,] validMoves;
+	List<(int,int)> validMoves;
 	public override void _Ready()
 	{
 		Connect("ContinuePlayer", this, "conP");
 		Connect("ContinueBot", this, "conB");
 		count = 2*boardSize + 1;
 		int i_size, j_size;
-		int i_pos = 20, j_pos = 20;
+		int i_pos = margin, j_pos = margin;
 		Button b = new Button();
 		buttons = new Button[count, count];
-		validMoves = new List<EdgeButton>((boardSize+1)*(boardSize+1));
+		validMoves = new List<(int, int)>(2*(boardSize+1)*(boardSize+1));
 		for(int i = 0; i<count; i++)
 		{
 			if(i%2 == 0) i_size = sSize;
 			else i_size = bSize;
-			j_pos = 20;
+			j_pos = margin;
 			for(int j = 0; j<count; j++)
 			{
 				if(j%2 == 0) j_size = sSize;
@@ -43,8 +45,11 @@ public class Main : Control
 				else if (i_size == sSize ^ j_size == sSize)
 				{
 					int o = j%2==0 ? 0 : 1; //horizontal : vertical
-					b = new EdgeButton(i,j,o);
-					validMoves.Add((EdgeButton)b);
+					b = new EdgeButton(i,j, o);
+					b.Text = validMoves.Count.ToString();
+					validMoves.Add((i,j));
+					Console.WriteLine(i.ToString() +" " +j.ToString() +" "+ validMoves.Count);
+					// Console.WriteLine(i.ToString() +" " +j.ToString() +" "+ (validMoves.Count-1).ToString());
 				}
 				else if (i_size == bSize && j_size == bSize)
 				{	
@@ -85,9 +90,12 @@ public class Main : Control
 	}
 	public void handle_button(int i, int j, int o)
 	{
+		// int new_j, new_i;
 		BoxButton tmp;
 		if(o==0) //horizontal
 		{
+			// new_i = Mathf.Clamp((i-1)/2,0,boardSize);
+			// new_j = Mathf.Clamp((j+1)/2,0,boardSize+1);
 			if(j>0) 
 			{
 				tmp = (BoxButton)buttons[i, j-1];
@@ -101,6 +109,8 @@ public class Main : Control
 		}
 		else
 		{
+			// new_i = Mathf.Clamp(i/2,0,boardSize);
+			// new_j = Mathf.Clamp(j/2,0,boardSize+1);
 			if(i>0) 
 			{
 				tmp = (BoxButton)buttons[i-1, j];
@@ -112,10 +122,15 @@ public class Main : Control
 				tmp.EdgeClaimed();
 			} 
 		}
+		// validMoves.RemoveAt(((EdgeButton)buttons[i,j]).index);
 		buttons[i,j].Text = "C";
 		buttons[i,j] = null;
-		validMoves.Remove((EdgeButton)buttons[i,j]);
+		validMoves.Remove((i,j));
 		Console.WriteLine(validMoves.Count);
+		// Console.WriteLine(i.ToString() +" " +j.ToString()+" "+ new_j.ToString() +" "+ (i*(boardSize+ i%2) + new_j ).ToString());
+		// Console.WriteLine();
+		// validMoves.RemoveAt(j+i/2)
+		// Console.WriteLine(validMoves.Count);
 	}
 	public void _on_filled()
 	{
@@ -123,7 +138,7 @@ public class Main : Control
 	}
 	public void _not_filled()
 	{
-		changePlayer = true;
+		// changePlayer = true;
 	}
 	public override void _Process(float delta)
 	{
@@ -135,6 +150,7 @@ public class Main : Control
 		while(true)
 		{
 			if(changePlayer) active_player = -active_player;
+			else changePlayer = true;
 
 			foreach (Control c in GetChildren()) c.MouseFilter = MouseFilterEnum.Ignore;
 			
@@ -143,7 +159,7 @@ public class Main : Control
 				//GameOver
 			}
 
-			Console.WriteLine(active_player);
+			// Console.WriteLine(active_player);
 			if(active_player == 1)
 			{
 				//player stuff
@@ -164,8 +180,12 @@ public class Main : Control
 		EdgeButton choice;
 		int c = validMoves.Count;
 		Random r = new Random();
-		choice = validMoves[r.Next(c)];
+		int tmp = r.Next(c);
+		// Console.WriteLine(tmp);
+		var (i,j) = validMoves[tmp];
+		choice = (EdgeButton)buttons[i, j];
 		choice.Claim();
+		// validMoves.Remove(choice);
 		await ToSignal(this,"ContinueBot");
 
 	}

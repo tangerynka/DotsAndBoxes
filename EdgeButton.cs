@@ -13,9 +13,6 @@ public class EdgeButton : Button
     [Signal]
     public delegate void ClaimedBot(int i, int j, int o);
     public int i, j;
-    // Declare member variables here. Examples:
-    // private int a = 2;
-    // private string b = "text";
     Theme t = (Theme)GD.Load("res://edgeButton.tres");
     Orientation orientation;
     // Called when the node enters the scene tree for the first time.
