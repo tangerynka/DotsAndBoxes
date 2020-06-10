@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Main.cs" type="Script" id=1]
 [ext_resource path="res://playerButton.tres" type="Theme" id=2]
@@ -7,6 +7,8 @@
 [ext_resource path="res://font.tres" type="DynamicFont" id=5]
 [ext_resource path="res://botButton.tres" type="Theme" id=6]
 [ext_resource path="res://basic.tres" type="Theme" id=7]
+[ext_resource path="res://watercolor-leaf-5-11.png" type="Texture" id=8]
+[ext_resource path="res://watercolor-leaf-3-9.png" type="Texture" id=9]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0.929412, 0.270588, 0.270588, 1 )
@@ -21,7 +23,22 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="watercolor-leaf-5-11" type="Sprite" parent="."]
+modulate = Color( 0.360784, 0.85098, 1, 0.513726 )
+position = Vector2( 586.183, 467.21 )
+rotation = -1.81878
+scale = Vector2( 1, 1 )
+texture = ExtResource( 8 )
+
+[node name="watercolor-leaf-3-9" type="Sprite" parent="."]
+modulate = Color( 0.368627, 0.823529, 1, 0.607843 )
+position = Vector2( 424.254, 487.567 )
+rotation = -0.899218
+scale = Vector2( 0.527883, 0.430169 )
+texture = ExtResource( 9 )
+
 [node name="Button" type="Button" parent="."]
+visible = false
 margin_right = 20.0
 margin_bottom = 20.0
 custom_styles/normal = SubResource( 1 )
@@ -91,17 +108,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Background" type="Sprite" parent="."]
-modulate = Color( 0.894118, 0.152941, 1, 1 )
-show_behind_parent = true
-position = Vector2( 336.915, 398.85 )
-rotation = -1.5708
-scale = Vector2( 0.283033, 0.33817 )
-z_index = -10
-texture = ExtResource( 3 )
-
 [node name="ColorRect" type="ColorRect" parent="."]
-modulate = Color( 1, 1, 1, 0.666667 )
 show_behind_parent = true
 margin_left = -14.0
 margin_top = -14.0
@@ -110,6 +117,14 @@ margin_bottom = 810.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Background" type="Sprite" parent="."]
+modulate = Color( 1, 0.152941, 0.94902, 0.419608 )
+show_behind_parent = true
+position = Vector2( 336.915, 398.85 )
+rotation = -1.5708
+scale = Vector2( 0.283033, 0.33817 )
+texture = ExtResource( 3 )
 
 [node name="Reset" type="Button" parent="."]
 margin_left = 260.0
