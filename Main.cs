@@ -19,12 +19,34 @@ public class Main : Control
 	bool changePlayer = true;
 	// EdgeButton[,] validMoves;
 	List<(int,int)> validMoves;
-	int playerScore = 0;
-	int botScore = 0;
+	bool reset = false;
+	int playerScore = 0, botScore = 0;
+	int PlayerScore 
+	{
+		get { return playerScore;} 
+		set { playerScore = value; GetNode<Button>("PlayerScore").Text = playerScore.ToString();}
+		
+	}
+	int BotScore
+	{
+		get { return botScore;} 
+		set { botScore = value; GetNode<Button>("BotScore").Text = botScore.ToString();}
+		
+	}
 	public override void _Ready()
+	{
+		prepare_game();
+		play();
+	}
+
+	private void prepare_game()
 	{
 		// Connect("ContinuePlayer", this, "conP");
 		// Connect("ContinueBot", this, "conB");
+		PlayerScore = 0;
+		BotScore = 0;
+		active_player = 1;
+		changePlayer = false;
 		count = 2*boardSize + 1;
 		int i_size, j_size;
 		int i_pos = margin, j_pos = margin;
@@ -68,9 +90,42 @@ public class Main : Control
 			i_pos += i_size;
 			
 		}
-		play();
 	}
 
+	private void clear_game()
+	{
+		foreach( var b in buttons) b.QueueFree();
+		buttons = null;
+		validMoves = null;
+	}
+	public void _on_Reset_pressed()
+	{
+		reset_game();
+	}
+	public void reset_game()
+	{
+		reset =  true;
+		EmitSignal(nameof(ContinuePlayer));
+		clear_game();
+		prepare_game();
+		reset = false;
+		play();
+	}
+	public void _on_3_pressed()
+	{
+		boardSize = 3;
+		reset_game();
+	}
+	public void _on_5_pressed()
+	{
+		boardSize = 5;
+		reset_game();
+	}
+	public void _on_10_pressed()
+	{
+		boardSize = 10;
+		reset_game();
+	}
 	public void _on_claimed_player(int i, int j, int o)
 	{
 		handle_button(i, j, o, 1);
@@ -118,7 +173,7 @@ public class Main : Control
 		}
 		// validMoves.RemoveAt(((EdgeButton)buttons[i,j]).index);
 		// buttons[i,j].Text = "C";
-		buttons[i,j] = null;
+		// buttons[i,j] = null;
 		validMoves.Remove((i,j));
 		Console.WriteLine(validMoves.Count);
 		// Console.WriteLine(i.ToString() +" " +j.ToString()+" "+ new_j.ToString() +" "+ (i*(boardSize+ i%2) + new_j ).ToString());
@@ -126,28 +181,27 @@ public class Main : Control
 		// validMoves.RemoveAt(j+i/2)
 		// Console.WriteLine(validMoves.Count);
 	}
-	public void _on_filled()
+	public void _on_filled(int i, int j, int ap)
 	{
 		changePlayer = false;
-	}
-	public void _not_filled()
-	{
-		// changePlayer = true;
+		if(ap==1) PlayerScore++;
+		else if(ap == -1) BotScore++;
+		// GetNode<Button>("PlayerScore").Text = playerScore.ToString();
+		// GetNode<Button>("BotScore").Text = botScore.ToString();
 	}
 	public override void _Process(float delta)
 	{
-		
 	}
 
 	async void play()
 	{
-		while(validMoves.Count>0)
+		while(validMoves.Count>0 && !reset)
 		{
 			if(changePlayer) active_player = -active_player;
 			else changePlayer = true;
 
 			foreach (var c in GetChildren()) 
-				if(c is Control) ((Control)c).MouseFilter = MouseFilterEnum.Ignore;
+				if(c is EdgeButton) ((Control)c).MouseFilter = MouseFilterEnum.Ignore;
 			
 			// if (validMoves.Count == 0)
 			// {
