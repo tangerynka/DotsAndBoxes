@@ -9,6 +9,11 @@ public class BoxButton : Button
     public delegate void NotFilled(int i, int j);
     int i, j;
     int claimed_edges = 0;
+    public int ClaimedEdges
+    {
+        get { return claimed_edges;}
+        set {claimed_edges = value;}
+    }
 
     public override void _Ready()
     {
@@ -27,8 +32,8 @@ public class BoxButton : Button
 
     internal void EdgeClaimed(int ap)
     {
-        claimed_edges++;
-        if(claimed_edges == 4) 
+        ClaimedEdges++;
+        if(ClaimedEdges == 4) 
         {
             EmitSignal(nameof(Filled), i, j, ap);
             // Connect("Claimed", GetParent(), "_on_claimed");

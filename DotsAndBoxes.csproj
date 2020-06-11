@@ -57,6 +57,7 @@
     <Compile Include="Main.cs" />
     <Compile Include="EdgeButton.cs" />
     <Compile Include="DotButton.cs" />
+    <Compile Include="MiniMax.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="signalManager.cs" />
   </ItemGroup>

@@ -2,9 +2,9 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-
 public class Main : Control
 {
+	MiniMax miniMax;
 	[Signal]
 	public delegate void ContinuePlayer();
 	[Signal]
@@ -15,6 +15,7 @@ public class Main : Control
 	int bSize = 40;
 	int sSize = 20;
 	int count;
+	int[,] StateOfGame;
 	int active_player = -1;
 	bool changePlayer = true;
 	// EdgeButton[,] validMoves;
@@ -33,6 +34,10 @@ public class Main : Control
 		set { botScore = value; GetNode<Button>("BotScore").Text = botScore.ToString();}
 		
 	}
+	int Score
+	{
+		get { return PlayerScore - BotScore;}
+	}
 	public override void _Ready()
 	{
 		prepare_game();
@@ -47,12 +52,16 @@ public class Main : Control
 		BotScore = 0;
 		active_player = 1;
 		changePlayer = false;
+		
 		count = 2*boardSize + 1;
-		int i_size, j_size;
-		int i_pos = margin, j_pos = margin;
 		Button b = new Button();
 		buttons = new Button[count, count];
+		StateOfGame = new int[count,count];
 		validMoves = new List<(int, int)>(2*(boardSize+1)*(boardSize+1));
+		miniMax = new MiniMax(count);
+
+		int i_size, j_size;
+		int i_pos = margin, j_pos = margin;
 		for(int i = 0; i<count; i++)
 		{
 			if(i%2 == 0) i_size = sSize;
