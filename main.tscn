@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Main.cs" type="Script" id=1]
 [ext_resource path="res://playerButton.tres" type="Theme" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://basic.tres" type="Theme" id=7]
 [ext_resource path="res://watercolor-leaf-5-11.png" type="Texture" id=8]
 [ext_resource path="res://watercolor-leaf-3-9.png" type="Texture" id=9]
+[ext_resource path="res://watercolor-rainbow-4.png" type="Texture" id=10]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0.929412, 0.270588, 0.270588, 1 )
@@ -27,7 +28,6 @@ __meta__ = {
 modulate = Color( 0.360784, 0.85098, 1, 0.513726 )
 position = Vector2( 586.183, 467.21 )
 rotation = -1.81878
-scale = Vector2( 1, 1 )
 texture = ExtResource( 8 )
 
 [node name="watercolor-leaf-3-9" type="Sprite" parent="."]
@@ -36,6 +36,13 @@ position = Vector2( 424.254, 487.567 )
 rotation = -0.899218
 scale = Vector2( 0.527883, 0.430169 )
 texture = ExtResource( 9 )
+
+[node name="watercolor-rainbow-4" type="Sprite" parent="."]
+visible = false
+modulate = Color( 1, 1, 1, 0.486275 )
+position = Vector2( 330.753, 350.106 )
+scale = Vector2( 0.57655, 2.6004 )
+texture = ExtResource( 10 )
 
 [node name="Button" type="Button" parent="."]
 visible = false

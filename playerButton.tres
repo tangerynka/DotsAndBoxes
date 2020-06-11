@@ -1,12 +1,6 @@
 [gd_resource type="Theme" load_steps=2 format=2]
 
-[sub_resource type="StyleBoxFlat" id=1]
-bg_color = Color( 0, 0.580392, 0.670588, 1 )
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color( 0.298039, 0.298039, 0.298039, 1 )
+[ext_resource path="res://turq.tres" type="StyleBox" id=1]
 
 [resource]
 Button/colors/font_color = Color( 0, 0, 0, 1 )
@@ -15,7 +9,7 @@ Button/colors/font_color_hover = Color( 0, 0, 0, 1 )
 Button/colors/font_color_pressed = Color( 0, 0, 0, 1 )
 Button/constants/hseparation = 2
 Button/fonts/font = null
-Button/styles/disabled = SubResource( 1 )
+Button/styles/disabled = ExtResource( 1 )
 Button/styles/focus = null
 Button/styles/hover = null
 Button/styles/normal = null
