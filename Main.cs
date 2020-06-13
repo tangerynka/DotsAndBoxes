@@ -20,6 +20,7 @@ public class Main : Control
 	bool changePlayer = true;
 	// EdgeButton[,] validMoves;
 	List<(int,int)> validMoves;
+	// List<(int,int)> allBoxes;
 	bool reset = false;
 	int playerScore = 0, botScore = 0;
 	int PlayerScore 
@@ -36,7 +37,7 @@ public class Main : Control
 	}
 	int Score
 	{
-		get { return PlayerScore - BotScore;}
+		get { return PlayerScore - BotScore;} // Player - maximizing, Bot - minimizing
 	}
 	public override void _Ready()
 	{
@@ -46,8 +47,12 @@ public class Main : Control
 
 	private void prepare_game()
 	{
-		// Connect("ContinuePlayer", this, "conP");
-		// Connect("ContinueBot", this, "conB");
+		/*  
+			StateOfGame:
+			0-4 - BoxButton - of how many claimed lines a box has
+			-1 - free edge 
+			-10 - DotButtons and claimed EdgeButtons
+		*/
 		PlayerScore = 0;
 		BotScore = 0;
 		active_player = 1;
@@ -74,19 +79,22 @@ public class Main : Control
 				if (i_size == sSize && j_size == sSize)
 				{
 					b = new DotButton(i,j);
+					StateOfGame[i,j]=-10;
 				}
 				else if (i_size == sSize ^ j_size == sSize)
 				{
 					int o = j%2==0 ? 0 : 1; //horizontal : vertical
 					b = new EdgeButton(i,j, o);
-					// b.Text = validMoves.Count.ToString();
 					validMoves.Add((i,j));
-					Console.WriteLine(i.ToString() +" " +j.ToString() +" "+ validMoves.Count);
+					StateOfGame[i,j]=-1;
+					// b.Text = validMoves.Count.ToString();
+					// Console.WriteLine(i.ToString() +" " +j.ToString() +" "+ validMoves.Count);
 					// Console.WriteLine(i.ToString() +" " +j.ToString() +" "+ (validMoves.Count-1).ToString());
 				}
 				else if (i_size == bSize && j_size == bSize)
 				{	
 					b = new BoxButton(i,j);
+					StateOfGame[i,j]=0;
 				}
 
 				buttons[i,j] = b;
@@ -158,11 +166,13 @@ public class Main : Control
 			{
 				tmp = (BoxButton)buttons[i, j-1];
 				tmp.EdgeClaimed(ap);
+				StateOfGame[i,j-1]++;
 			}
 			if(j<count-1) 
 			{
 				tmp = (BoxButton)buttons[i, j+1];
 				tmp.EdgeClaimed(ap);
+				StateOfGame[i,j+1]++;
 			}
 		}
 		else
@@ -173,11 +183,13 @@ public class Main : Control
 			{
 				tmp = (BoxButton)buttons[i-1, j];
 				tmp.EdgeClaimed(ap);
+				StateOfGame[i-1,j]++;
 			}
 			if(i<count-1) 
 			{
 				tmp = (BoxButton)buttons[i+1, j];
 				tmp.EdgeClaimed(ap);
+				StateOfGame[i+1,j]++;
 			} 
 		}
 		// validMoves.RemoveAt(((EdgeButton)buttons[i,j]).index);
@@ -235,12 +247,14 @@ public class Main : Control
 	public async void AI_turn()
 	{
 		EdgeButton choice;
-		int c = validMoves.Count;
-		Random r = new Random();
-		int tmp = r.Next(c);
-		// Console.WriteLine(tmp);
-		var (i,j) = validMoves[tmp];
-		choice = (EdgeButton)buttons[i, j];
+		// int c = validMoves.Count;
+		// Random r = new Random();
+		// int tmp = r.Next(c);
+		// // Console.WriteLine(tmp);
+		(int, int) move;
+		miniMax.Move(StateOfGame,validMoves,2,Score,true,out move);
+		var (i,j) = move;
+		choice = (EdgeButton)buttons[i,j];
 		choice.Claim();
 		// validMoves.Remove(choice);
 		await ToSignal(this,"ContinueBot");
