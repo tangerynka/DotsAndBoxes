@@ -10,7 +10,7 @@ public class Main : Control
 	[Signal]
 	public delegate void ContinueBot();
 	Button[,] buttons; 
-	int boardSize = 10;
+	int boardSize = 5;
 	int margin = 20;
 	int bSize = 40;
 	int sSize = 20;
@@ -98,8 +98,10 @@ public class Main : Control
 				}
 
 				buttons[i,j] = b;
-				b.RectPosition = new Vector2(i_pos, j_pos);
-				b.RectSize = new Vector2(i_size,j_size);
+				b.RectPosition = new Vector2(j_pos, i_pos);
+				b.RectSize = new Vector2(j_size,i_size);
+				// b.RectPosition = new Vector2(i_pos, j_pos);
+				// b.RectSize = new Vector2(i_size,j_size);
 				j_pos += j_size;
 				b.Show();
 				AddChild(b);
@@ -195,9 +197,12 @@ public class Main : Control
 		// validMoves.RemoveAt(((EdgeButton)buttons[i,j]).index);
 		// buttons[i,j].Text = "C";
 		// buttons[i,j] = null;
+		// Console.WriteLine(((EdgeButton)buttons[i,j]).i.ToString());
 		validMoves.Remove((i,j));
-		Console.WriteLine(validMoves.Count);
-		// Console.WriteLine(i.ToString() +" " +j.ToString()+" "+ new_j.ToString() +" "+ (i*(boardSize+ i%2) + new_j ).ToString());
+		// Console.WriteLine(validMoves.Count);
+
+		// Console.WriteLine(i.ToString() +" " +j.ToString());
+		
 		// Console.WriteLine();
 		// validMoves.RemoveAt(j+i/2)
 		// Console.WriteLine(validMoves.Count);
@@ -251,9 +256,20 @@ public class Main : Control
 		// Random r = new Random();
 		// int tmp = r.Next(c);
 		// // Console.WriteLine(tmp);
+		// for (int a = 0; a < count; a++)
+        // {
+        //     for (int b = 0; b < count; b++)
+        //     {
+        //         Console.Write(" " + StateOfGame[a, b].ToString());
+        //     }
+        //     Console.WriteLine();
+        // }
+        // Console.WriteLine();
+
 		(int, int) move;
-		miniMax.Move(StateOfGame,validMoves,2,Score,true,out move);
+		miniMax.Move(StateOfGame,validMoves,3,Score,true,out move);
 		var (i,j) = move;
+		if (i<0 || j<0) return;
 		choice = (EdgeButton)buttons[i,j];
 		choice.Claim();
 		// validMoves.Remove(choice);

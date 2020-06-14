@@ -29,24 +29,25 @@ public class MiniMax
         // {
         //     for (int j = 0; j < gamesize; j++)
         //     {
-        //         Console.Write(string.Format("{0} ", StateOfGame[i, j]));
+        //         Console.Write(" " + StateOfGame[i, j].ToString());
         //     }
         //     Console.WriteLine();
         // }
         // Console.WriteLine();
+        mv = (-1,-1);
         if(validMoves.Count == 0 || depth <=0) 
         {
-            mv = (-1,-1);
             return score;
         }
         // int i=0, j=0;
-        mv = validMoves[0];
+        // mv = validMoves[0];
         BestMoves = new List<(int, int)>(gamesize*gamesize);
         GoodMoves = new List<(int, int)>(gamesize*gamesize);
         WorstMoves = new List<(int, int)>(gamesize*gamesize);
         List<(int,int)> tmpL;
         int Score = score;
         int tmpScore;
+        int inc = minimazing? -1 : 1;
         (int,int) m;
         for (int i = 0; i < gamesize; i++)
         {
@@ -80,11 +81,23 @@ public class MiniMax
                 }
             }
         }
+        // Console.WriteLine("good before"); 
+        // GoodMoves.ForEach(item=> Console.WriteLine(item));
+        
         GoodMoves = GoodMoves.Intersect(validMoves).ToList();
         WorstMoves = WorstMoves.Intersect(validMoves).ToList();
         BestMoves = BestMoves.Intersect(validMoves).ToList();
         GoodMoves = GoodMoves.Except(WorstMoves).ToList();
-        // GoodMoves = GoodMoves.Where(x=> !WorstMoves.Contains(x).ToList());
+        GoodMoves = GoodMoves.Except(BestMoves).ToList();
+        // Console.WriteLine("best");
+        // BestMoves.ForEach(item=> Console.WriteLine(item));
+        // Console.WriteLine("worst");
+        // WorstMoves.ForEach(item=> Console.WriteLine(item));
+        // Console.WriteLine("good after"); 
+        // GoodMoves.ForEach(item=> Console.WriteLine(item));
+        // Console.WriteLine(mv);
+        // return 0;
+       
         // validMoves.Remove((i,j));
         foreach (var (i,j) in BestMoves)
         {
@@ -96,7 +109,7 @@ public class MiniMax
             if(i>0) if(StateOfGame[i-1,j]>=0) StateOfGame[i-1,j]+=1;
             if(j>0) if(StateOfGame[i,j-1]>=0) StateOfGame[i,j-1]+=1;
             if(j< gamesize-1) if(StateOfGame[i,j+1]>=0) StateOfGame[i,j+1]+=1;
-            tmpScore = Move(StateOfGame, tmpL, depth-1, score, minimazing, out m);
+            tmpScore = Move(StateOfGame, tmpL, depth-1, score+inc, minimazing, out m);
             if((minimazing && tmpScore <= Score) || (!minimazing && tmpScore >= Score))
             {
                 // Console.WriteLine("B"+ depth.ToString()+" "+ score+ " " + Score);
@@ -104,7 +117,7 @@ public class MiniMax
                 mv = (i,j);
             }
         }
-        if(Score == score)
+        if (mv==(-1,-1))
         {
             foreach (var (i,j) in GoodMoves)
             {
@@ -117,16 +130,16 @@ public class MiniMax
                 if(j>0) if(StateOfGame[i,j-1]>=0) StateOfGame[i,j-1]+=1;
                 if(j< gamesize-1) if(StateOfGame[i,j+1]>=0) StateOfGame[i,j+1]+=1;
                 tmpScore = Move(StateOfGame, tmpL, depth-1, score, !minimazing, out m);
-                if((minimazing && tmpScore < Score) || (!minimazing && tmpScore > Score))
+                if((minimazing && tmpScore <= Score) || (!minimazing && tmpScore >= Score))
                 {
                     // Console.WriteLine("G"+ depth.ToString()+" "+ score+ " " + Score);
                     Score = tmpScore;
                     mv = (i,j);
                 }
             }
-
         }
-        if(Score == score)
+
+        if(mv==(-1,-1))
         {
             foreach (var (i,j) in WorstMoves)
             {
@@ -139,12 +152,12 @@ public class MiniMax
                 if(j>0) if(StateOfGame[i,j-1]>=0) StateOfGame[i,j-1]+=1;
                 if(j< gamesize-1) if(StateOfGame[i,j+1]>0) StateOfGame[i,j+1]+=1;
                 tmpScore = Move(StateOfGame, tmpL, depth-1, score, !minimazing, out m);
-                if((minimazing && tmpScore < Score) || (!minimazing && tmpScore > Score))
-                {
+                // if((minimazing && tmpScore <= Score) || (!minimazing && tmpScore >= Score))
+                // {
                     // Console.WriteLine("W "+ depth.ToString()+" "+ score+ " " + Score);
                     Score = tmpScore;
                     mv = (i,j);
-                }
+                // }
             }
         }
         return Score;

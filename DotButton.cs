@@ -3,7 +3,7 @@ using System;
 
 public class DotButton : Button
 {
-    int i, j;
+    public int i, j;
 
     public override void _Ready()
     {

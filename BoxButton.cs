@@ -7,7 +7,7 @@ public class BoxButton : Button
     public delegate void Filled(int i, int j, int ap);
     [Signal]
     public delegate void NotFilled(int i, int j);
-    int i, j;
+    public int i, j;
     int claimed_edges = 0;
     public int ClaimedEdges
     {
