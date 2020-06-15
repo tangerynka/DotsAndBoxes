@@ -131,7 +131,7 @@ public class Main : Control
 	public void _on_3_pressed()
 	{
 		boardSize = 3;
-		searchingDepth = 5;
+		searchingDepth = 3;
 		reset_game();
 	}
 	public void _on_5_pressed()
@@ -217,6 +217,7 @@ public class Main : Control
 			{
 				// AI stuff
 				AI_turn();
+				await Task.Delay(500);
 			}
 		}
 	}
@@ -225,7 +226,7 @@ public class Main : Control
 	{
 		EdgeButton choice;
 		(int, int) move;
-		miniMax.Move(StateOfGame,validMoves,1,Score,true,out move);
+		miniMax.Move(StateOfGame,validMoves,searchingDepth,Score,true,out move);
 		var (i,j) = move;
 		if (i<0 || j<0) return;
 		choice = (EdgeButton)buttons[i,j];
