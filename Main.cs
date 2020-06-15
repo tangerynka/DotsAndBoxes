@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 public class Main : Control
 {
@@ -11,6 +12,7 @@ public class Main : Control
 	public delegate void ContinueBot();
 	Button[,] buttons; 
 	int boardSize = 5;
+	int searchingDepth = 3;
 	int margin = 20;
 	int bSize = 40;
 	int sSize = 20;
@@ -87,9 +89,6 @@ public class Main : Control
 					b = new EdgeButton(i,j, o);
 					validMoves.Add((i,j));
 					StateOfGame[i,j]=-1;
-					// b.Text = validMoves.Count.ToString();
-					// Console.WriteLine(i.ToString() +" " +j.ToString() +" "+ validMoves.Count);
-					// Console.WriteLine(i.ToString() +" " +j.ToString() +" "+ (validMoves.Count-1).ToString());
 				}
 				else if (i_size == bSize && j_size == bSize)
 				{	
@@ -100,8 +99,6 @@ public class Main : Control
 				buttons[i,j] = b;
 				b.RectPosition = new Vector2(j_pos, i_pos);
 				b.RectSize = new Vector2(j_size,i_size);
-				// b.RectPosition = new Vector2(i_pos, j_pos);
-				// b.RectSize = new Vector2(i_size,j_size);
 				j_pos += j_size;
 				b.Show();
 				AddChild(b);
@@ -129,20 +126,24 @@ public class Main : Control
 		prepare_game();
 		reset = false;
 		play();
+
 	}
 	public void _on_3_pressed()
 	{
 		boardSize = 3;
+		searchingDepth = 5;
 		reset_game();
 	}
 	public void _on_5_pressed()
 	{
 		boardSize = 5;
+		searchingDepth = 3;
 		reset_game();
 	}
 	public void _on_10_pressed()
 	{
 		boardSize = 10;
+		searchingDepth = 2;
 		reset_game();
 	}
 	public void _on_claimed_player(int i, int j, int o)
@@ -154,16 +155,12 @@ public class Main : Control
 	{
 		handle_button(i, j, o, -1);
 		EmitSignal(nameof(ContinueBot));
-
 	}
 	public void handle_button(int i, int j, int o, int ap)
 	{
-		// int new_j, new_i;
 		BoxButton tmp;
 		if(o==0) //horizontal
 		{
-			// new_i = Mathf.Clamp((i-1)/2,0,boardSize);
-			// new_j = Mathf.Clamp((j+1)/2,0,boardSize+1);
 			if(j>0) 
 			{
 				tmp = (BoxButton)buttons[i, j-1];
@@ -179,8 +176,6 @@ public class Main : Control
 		}
 		else
 		{
-			// new_i = Mathf.Clamp(i/2,0,boardSize);
-			// new_j = Mathf.Clamp(j/2,0,boardSize+1);
 			if(i>0) 
 			{
 				tmp = (BoxButton)buttons[i-1, j];
@@ -194,46 +189,23 @@ public class Main : Control
 				StateOfGame[i+1,j]++;
 			} 
 		}
-		// validMoves.RemoveAt(((EdgeButton)buttons[i,j]).index);
-		// buttons[i,j].Text = "C";
-		// buttons[i,j] = null;
-		// Console.WriteLine(((EdgeButton)buttons[i,j]).i.ToString());
 		validMoves.Remove((i,j));
-		// Console.WriteLine(validMoves.Count);
-
-		// Console.WriteLine(i.ToString() +" " +j.ToString());
-		
-		// Console.WriteLine();
-		// validMoves.RemoveAt(j+i/2)
-		// Console.WriteLine(validMoves.Count);
 	}
 	public void _on_filled(int i, int j, int ap)
 	{
 		changePlayer = false;
 		if(ap==1) PlayerScore++;
 		else if(ap == -1) BotScore++;
-		// GetNode<Button>("PlayerScore").Text = playerScore.ToString();
-		// GetNode<Button>("BotScore").Text = botScore.ToString();
 	}
-	public override void _Process(float delta)
-	{
-	}
-
 	async void play()
 	{
 		while(validMoves.Count>0 && !reset)
 		{
 			if(changePlayer) active_player = -active_player;
 			else changePlayer = true;
-
 			foreach (var c in GetChildren()) 
 				if(c is EdgeButton) ((Control)c).MouseFilter = MouseFilterEnum.Ignore;
-			
-			// if (validMoves.Count == 0)
-			// {
-			// 	//GameOver
-			// }
-
+				
 			if(active_player == 1)
 			{
 				//player stuff
@@ -243,7 +215,7 @@ public class Main : Control
 			}
 			else if(active_player == -1)
 			{
-				//AI stuff
+				// AI stuff
 				AI_turn();
 			}
 		}
@@ -252,29 +224,13 @@ public class Main : Control
 	public async void AI_turn()
 	{
 		EdgeButton choice;
-		// int c = validMoves.Count;
-		// Random r = new Random();
-		// int tmp = r.Next(c);
-		// // Console.WriteLine(tmp);
-		// for (int a = 0; a < count; a++)
-        // {
-        //     for (int b = 0; b < count; b++)
-        //     {
-        //         Console.Write(" " + StateOfGame[a, b].ToString());
-        //     }
-        //     Console.WriteLine();
-        // }
-        // Console.WriteLine();
-
 		(int, int) move;
-		miniMax.Move(StateOfGame,validMoves,3,Score,true,out move);
+		miniMax.Move(StateOfGame,validMoves,1,Score,true,out move);
 		var (i,j) = move;
 		if (i<0 || j<0) return;
 		choice = (EdgeButton)buttons[i,j];
 		choice.Claim();
-		// validMoves.Remove(choice);
 		await ToSignal(this,"ContinueBot");
-
 	}
 
 }
